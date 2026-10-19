@@ -11,32 +11,35 @@ import {
 function Dashboard() {
   const navigate = useNavigate();
   const [filtro, setFiltro] = useState("todas");
-
-  const tarefas = [
-    {
-      id: 1,
-      titulo: "Finalizar tela de login",
-      prioridade: "Alta",
-      status: "Concluída",
-    },
-    {
-      id: 2,
-      titulo: "Criar dashboard",
-      prioridade: "Média",
-      status: "Em andamento",
-    },
-    {
-      id: 3,
-      titulo: "Configurar banco de dados",
-      prioridade: "Alta",
-      status: "Pendente",
-    },
-  ];
+  const [formularioAberto, setFormularioAberto] = useState(false);
+  const [tarefas, setTarefas] = useState([]);
+  const [titulo, setTitulo] = useState("");
 
   const tarefasFiltradas = tarefas.filter((tarefa) => {
     if (filtro === "todas") return true;
     return tarefa.status.toLowerCase() === filtro;
   });
+  function salvarTarefa(event) {
+    event.preventDefault();
+
+    const tituloLimpo = titulo.trim();
+
+    if (!tituloLimpo) {
+      return;
+    }
+
+    const novaTarefa = {
+      id: crypto.randomUUID(),
+      titulo: tituloLimpo,
+      prioridade: "Média",
+      status: "Pendente",
+    };
+
+    setTarefas((tarefasAtuais) => [...tarefasAtuais, novaTarefa]);
+    setFiltro("todas");
+    setTitulo("");
+    setFormularioAberto(false);
+  }
 
   function sair() {
     navigate("/");
@@ -48,9 +51,9 @@ function Dashboard() {
         <div>
           <h2 className="sidebar-logo">✓ TaskFlow</h2>
 
-          <nav className="sidebar-menu">
+          <nav className="summary-icon purple">
             <button className="menu-item active">
-              <ListTodo size={20} />
+              <ListTodo size={24} />
               Minhas tarefas
             </button>
           </nav>
@@ -69,16 +72,54 @@ function Dashboard() {
             <h1>Visão geral das tarefas</h1>
           </div>
 
-          <button className="new-task-button">
+          <button className="new-task-button"
+            onClick={() => setFormularioAberto(true)}>
             <Plus size={20} />
             Nova tarefa
           </button>
         </header>
+        {formularioAberto && (
+          <section
+            className="new-task-form"
+            aria-labelledby="nova-tarefa-titulo"
+          >
+            <h2 id="nova-tarefa-titulo">Nova tarefa</h2>
+
+            <form onSubmit={salvarTarefa}>
+              <label htmlFor="titulo-tarefa">Título da tarefa</label>
+
+              <input
+                id="titulo-tarefa"
+                name="titulo"
+                type="text"
+                placeholder="Ex.: Estudar eventos no React"
+                value={titulo}
+                onChange={(event) => setTitulo(event.target.value)}
+                required
+              />
+
+              <button type="submit" disabled={!titulo.trim()}>
+                Salvar tarefa
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setTitulo("");
+                  setFormularioAberto(false);
+                }}
+              >
+                Cancelar
+              </button>
+            </form>
+          </section>
+        )}
 
         <section className="summary-grid">
           <article className="summary-card">
             <div className="summary-icon purple">
               <ListTodo size={24} />
+
             </div>
             <div>
               <span>Total de tarefas</span>
