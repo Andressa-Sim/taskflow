@@ -1,0 +1,22 @@
+Vamos construir o TaskFlow passo a passo, começando por uma versão simples e depois adicionando recursos profissionais.
+
+Etapa 1 — Definir o projeto
+
+O TaskFlow será um gerenciador de tarefas com:
+
+Cadastro e login de usuários
+Criação, edição e exclusão de tarefas
+Prioridade: baixa, média ou alta
+Status: pendente, em andamento ou concluída
+Data de vencimento
+Filtros e pesquisa
+Dashboard com resumo das tarefas
+Banco de dados MySQL
+Interface responsiva
+
+Tecnologias:
+
+Front-end: React, JavaScript, HTML e CSS
+Back-end: Node.js e Express
+Banco: MySQL
+Versionamento: Git e GitHub
